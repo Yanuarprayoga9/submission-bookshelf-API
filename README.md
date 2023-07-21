@@ -1,4 +1,4 @@
-# npm install
+
 # npm run start-dev
 # npm run start
 Terdapat 7 kriteria utama yang harus Anda penuhi dalam membuat proyek Bookshelf API.

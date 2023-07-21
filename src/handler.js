@@ -6,6 +6,7 @@ const addBookHandler = (request, h) => {
     name, year, author, summary, publisher, pageCount, readPage, reading,
   } = request.payload;
 
+  // if name undefined
   if (name === undefined) {
     const response = h.response({
       status: 'fail',
@@ -15,8 +16,8 @@ const addBookHandler = (request, h) => {
 
     return response;
   }
-
-  if (pageCount < readPage) {
+  // if readPage > pageCount
+  if (readPage > pageCount) {
     const response = h.response({
       status: 'fail',
       message: 'Gagal menambahkan buku. readPage tidak boleh lebih besar dari pageCount',
@@ -44,9 +45,7 @@ const addBookHandler = (request, h) => {
     insertedAt,
     updatedAt,
   };
-
   books.push(newBook);
-
   const isSuccess = books.filter((book) => book.id === id).length > 0;
 
   if (isSuccess) {
@@ -58,7 +57,6 @@ const addBookHandler = (request, h) => {
       },
     });
     response.code(201);
-
     return response;
   }
 
@@ -67,10 +65,10 @@ const addBookHandler = (request, h) => {
     message: 'Buku gagal ditambahkan',
   });
   response.code(500);
-
   return response;
 };
 
+// get all book
 const getAllBooksHandler = (request, h) => {
   const { name, reading, finished } = request.query;
 
@@ -100,14 +98,13 @@ const getAllBooksHandler = (request, h) => {
     },
   });
   response.code(200);
-
   return response;
 };
 
+// book by id
 const getBookByIdHandler = (request, h) => {
   const { id } = request.params;
   const book = books.filter((b) => b.id === id)[0];
-
   if (book !== undefined) {
     return {
       status: 'success',
@@ -116,23 +113,22 @@ const getBookByIdHandler = (request, h) => {
       },
     };
   }
-
   const response = h.response({
     status: 'fail',
     message: 'Buku tidak ditemukan',
   });
   response.code(404);
-
   return response;
 };
 
+// edit handler
 const editBookByIdHandler = (request, h) => {
   const { id } = request.params;
   const {
     name, year, author, summary, publisher, pageCount, readPage, reading,
   } = request.payload;
-  const updatedAt = new Date().toISOString();
   const index = books.findIndex((book) => book.id === id);
+  const updatedAt = new Date().toISOString();
 
   if (index !== -1) {
     if (name === undefined) {
@@ -141,7 +137,6 @@ const editBookByIdHandler = (request, h) => {
         message: 'Gagal memperbarui buku. Mohon isi nama buku',
       });
       response.code(400);
-
       return response;
     }
 
@@ -151,7 +146,6 @@ const editBookByIdHandler = (request, h) => {
         message: 'Gagal memperbarui buku. readPage tidak boleh lebih besar dari pageCount',
       });
       response.code(400);
-
       return response;
     }
 
